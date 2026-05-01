@@ -135,3 +135,81 @@ export const eliminarUsuario = async (id) => {
 };
 
 
+
+
+
+
+
+
+//TALLERES HORARIO 
+const BASE_URL = "http://localhost:81/creditos_api";
+
+// 🔹 Obtener calendario
+export const obtenerCalendario = async () => {
+  const res = await fetch(`${BASE_URL}/talleres/obtener_calendario.php`);
+  return await res.json();
+};
+
+// 🔹 Crear taller
+export const crearTaller = async (data) => {
+  const res = await fetch(`${BASE_URL}/talleres/crear_taller.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  // 1. Obtenemos la respuesta como texto plano primero
+  const text = await res.text();
+  
+  // 2. Lo mostramos en la consola para ver el Warning de PHP
+  console.log("CONTENIDO DEL SERVIDOR:", text);
+
+  // 3. Intentamos convertirlo a objeto solo si es posible
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("No se pudo parsear JSON porque el PHP envió un error.");
+    return { error: "Fallo en el servidor", raw: text };
+  }
+};
+
+// 🔹 Agregar horario
+export const agregarHorario = async (data) => {
+  const res = await fetch(`${BASE_URL}/talleres/agregar_horario.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await res.json();
+};
+
+//  Editar horario
+export const editarHorario = async (data) => {
+  const res = await fetch(`${BASE_URL}/talleres/editar_horario.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await res.json();
+};
+
+// 🔹 Eliminar horario
+export const eliminarHorario = async (id) => {
+  const res = await fetch(`${BASE_URL}/talleres/eliminar_horario.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id })
+  });
+
+  return await res.json();
+};
