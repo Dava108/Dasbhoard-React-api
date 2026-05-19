@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:81/creditos_api";
 
+
 export const getAlumnos = async () => {
   const res = await fetch(`${API_URL}/alumnos/get_alumnos.php`);
   return res.json();
@@ -88,13 +89,23 @@ export const importarKardex = async (file) => {
   return res.json();
 };
 
+//LOGIN
+
 export const login = async (data) => {
   const res = await fetch(`${API_URL}/auth/login.php`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include", //  IMPORTANTE
     body: JSON.stringify(data),
   });
+
   return res.json();
 };
+
+
+
 export const cambiarPassword = async (data) => {
   const res = await fetch(`${API_URL}/auth/cambiar_password.php`, {
     method: "POST",
@@ -106,6 +117,10 @@ export const cambiarPassword = async (data) => {
 
   return res.json();
 };
+
+
+
+
 export const getUsuarios = async () => {
   const res = await fetch(`${API_URL}/usuarios/get_usuarios.php`);
   return res.json();
@@ -138,15 +153,19 @@ export const eliminarUsuario = async (id) => {
 
 
 
-
-
-
 //TALLERES HORARIO 
-const BASE_URL = "http://localhost:81/creditos_api";
+const BASE_URL = "http://localhost:81/creditos_api"
+
 
 // 🔹 Obtener calendario
 export const obtenerCalendario = async () => {
-  const res = await fetch(`${BASE_URL}/talleres/obtener_calendario.php`);
+  const res = await fetch(
+    `${BASE_URL}/talleres/obtener_calendario.php`,
+    {
+      credentials: "include"
+    }
+  );
+
   return await res.json();
 };
 
@@ -157,12 +176,13 @@ export const crearTaller = async (data) => {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify(data)
   });
 
   // 1. Obtenemos la respuesta como texto plano primero
   const text = await res.text();
-  
+
   // 2. Lo mostramos en la consola para ver el Warning de PHP
   console.log("CONTENIDO DEL SERVIDOR:", text);
 
@@ -182,6 +202,7 @@ export const agregarHorario = async (data) => {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify(data)
   });
 
@@ -195,6 +216,7 @@ export const editarHorario = async (data) => {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify(data)
   });
 
@@ -208,7 +230,83 @@ export const eliminarHorario = async (id) => {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({ id })
+  });
+
+  return await res.json();
+};
+
+
+//VISTA ALUMNO PARA INSCRIPCIONES 
+
+export const obtenerTalleresAlumno = async () => {
+  const res = await fetch(`${BASE_URL}/alumno/talleres/obtener_talleres.php`);
+  return await res.json();
+  
+};
+
+export const obtenerHorariosAlumno = async (taller_id) => {
+  const res = await fetch(
+    `${BASE_URL}/alumno/horarios/obtener_horarios.php?taller_id=${taller_id}`,
+    {
+      credentials: "include"
+    }
+  );
+
+  return await res.json();
+};
+
+
+
+export const inscribirse = async (horario_id) => {
+  const res = await fetch(`${BASE_URL}/alumno/inscripciones/inscribirse.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include", // 
+    body: JSON.stringify({
+      horario_id
+    })
+  });
+
+  return await res.json();
+};
+
+export const cancelarInscripcionAlumno = async (
+  alumno_id,
+  horario_id
+) => {
+
+  const res = await fetch(
+    `${BASE_URL}/alumno/inscripciones/cancelar_inscripcion.php`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        alumno_id,
+        horario_id
+      })
+    }
+  );
+
+  return await res.json();
+};
+
+
+
+export const eliminarTaller = async (taller_id) => {
+  const res = await fetch(`${BASE_URL}/admin/talleres/eliminar_taller.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include", // 
+    body: JSON.stringify({ taller_id })
   });
 
   return await res.json();

@@ -279,6 +279,9 @@ const Sidebar = ({isOpen, setIsOpen}) => {
 
           {user?.rol === "alumno" && (
             <>
+              <SectionLabel label="General" colors={colors} />
+              <Item title="Inscripcion" to="/inscripciones" icon={<HomeOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
+              
               <SectionLabel label="Créditos" colors={colors} />
               <Item title="Mi Kardex" to="/alumno" icon={<PersonOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
 

@@ -1,13 +1,18 @@
-import { useState } from "react";
-import PrivateRoute from "./components/PrivateRoute";
+import { useState, useContext } from "react";
+import { useLocation, Routes, Route, Navigate } from "react-router-dom";
+
+import { CssBaseline, ThemeProvider } from "@mui/material";
+
+import { ColorModeContext, useMode } from "./theme";
+
+import { AuthContext } from "./context/AuthContext";
+
 import RoleRoute from "./components/RoleRoute";
-import { useLocation } from "react-router-dom";
-import { ColorModeContext, useMode } from './theme';
-import { CssBaseline, ThemeProvider } from "@mui/material"
+
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
+
 import Dashboard from "./scenes/dashboard";
-import { Routes, Route } from "react-router-dom";
 import Team from "./scenes/team";
 import Alumno from "./scenes/alumno/index.jsx";
 import Invoices from "./scenes/invoices";
@@ -21,98 +26,98 @@ import Geography from "./scenes/geography";
 import Calendar from "./scenes/calendar/calendar.jsx";
 import TestApi from "./scenes/pages/Testapi.jsx";
 import Login from "./scenes/login";
-import { Navigate } from "react-router-dom";
 import Configuracion from "./scenes/configuracion";
 import Usuarios from "./scenes/usuarios/index.jsx";
-import TalleresAdmin from "./scenes/talleres";
-
-
-
-
-
-
-
-
-
-
-
+import AdminIndex from "./scenes/talleres";
+import Inscripciones from "./scenes/Inscripciones/index.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
+
   const [isOpen, setIsOpen] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  const { user } = useContext(AuthContext);
+
   const location = useLocation();
+
   const isLoginPage = location.pathname === "/login";
-
-
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {/* <div className="app">
-          <Sidebar />
-          <main className="content" style={{ flexGrow: 1, height: "100vh", overflow: "auto" }}>
-            <Topbar /> */}
+
         <div className="app">
+          {/* SIDEBAR */}
           {user && !isLoginPage && (
             <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
           )}
 
-          <main className="content" style={{ flexGrow: 1, height: "100vh", overflow: "auto" }}>
+          {/* CONTENT */}
+          <main
+            className="content"
+            style={{
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto"
+            }}
+          >
+            {/* TOPBAR */}
             {user && !isLoginPage && (
-              <Topbar onMenuClick={() => setIsOpen(prev => !prev)} />
+              <Topbar
+                onMenuClick={() =>
+                  setIsOpen((prev) => !prev)
+                }
+              />
             )}
 
             <Routes>
-              {/* Ruta inicial inteligente */}
+
+              {/* ========================= */}
+              {/* REDIRECT INICIAL */}
+              {/* ========================= */}
               <Route
                 path="/"
                 element={
-                  JSON.parse(localStorage.getItem("user"))
-                    ? <Navigate to="/Dashboard" replace />
-                    : <Navigate to="/login" replace />
+                  user ? (
+                    user.rol === "admin" ? (
+                      <Navigate to="/dashboard" replace />
+                    ) : (
+                      <Navigate to="/alumno" replace />
+                    )
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
                 }
               />
 
-              <Route path="/login" element={<Login />} />
+              {/* ========================= */}
+              {/* LOGIN */}
+              {/* ========================= */}
+              <Route
+                path="/login"
+                element={<Login />}
+              />
+
+              {/* ========================= */}
+              {/* ADMIN */}
+              {/* ========================= */}
 
               <Route
-                path="/Dashboard"
+                path="/dashboard"
                 element={
-                  <PrivateRoute>
-                    <RoleRoute role="admin">
-                      <Dashboard />
-                    </RoleRoute>
-                  </PrivateRoute>
+                  <RoleRoute role="admin">
+                    <Dashboard />
+                  </RoleRoute>
                 }
               />
 
               <Route
                 path="/team"
                 element={
-                  <PrivateRoute>
-                    <RoleRoute role="admin">
-                      <Team />
-                    </RoleRoute>
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/alumno"
-                element={
-                  <RoleRoute role="alumno">
-                    <Alumno />
+                  <RoleRoute role="admin">
+                    <Team />
                   </RoleRoute>
-                }
-              />
-
-              <Route
-                path="/configuracion"
-                element={
-                  <PrivateRoute>
-                    <Configuracion />
-                  </PrivateRoute>
                 }
               />
 
@@ -129,21 +134,141 @@ function App() {
                 path="/talleres"
                 element={
                   <RoleRoute role="admin">
-                    <TalleresAdmin />
+                    <AdminIndex />
                   </RoleRoute>
                 }
               />
 
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/form" element={<Form />} />
-              <Route path="/bar" element={<Bar />} />
-              <Route path="/pie" element={<Pie />} />
-              <Route path="/line" element={<Line />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/geography" element={<Geography />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/Testapi" element={<TestApi />} />
+              <Route
+                path="/configuracion"
+                element={
+                  <RoleRoute role="admin">
+                    <Configuracion />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/contacts"
+                element={
+                  <RoleRoute role="admin">
+                    <Contacts />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/invoices"
+                element={
+                  <RoleRoute role="admin">
+                    <Invoices />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/form"
+                element={
+                  <RoleRoute role="admin">
+                    <Form />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/bar"
+                element={
+                  <RoleRoute role="admin">
+                    <Bar />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/pie"
+                element={
+                  <RoleRoute role="admin">
+                    <Pie />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/line"
+                element={
+                  <RoleRoute role="admin">
+                    <Line />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/faq"
+                element={
+                  <RoleRoute role="admin">
+                    <FAQ />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/geography"
+                element={
+                  <RoleRoute role="admin">
+                    <Geography />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/calendar"
+                element={
+                  <RoleRoute role="admin">
+                    <Calendar />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/testapi"
+                element={
+                  <RoleRoute role="admin">
+                    <TestApi />
+                  </RoleRoute>
+                }
+              />
+
+              {/* ========================= */}
+              {/* ALUMNO */}
+              {/* ========================= */}
+
+              <Route
+                path="/alumno"
+                element={
+                  <RoleRoute role="alumno">
+                    <Alumno />
+                  </RoleRoute>
+                }
+              />
+
+              <Route
+                path="/inscripciones"
+                element={
+                  <RoleRoute role="alumno">
+                    <Inscripciones />
+                  </RoleRoute>
+                }
+              />
+
+              {/* ========================= */}
+              {/* 404 */}
+              {/* ========================= */}
+
+              <Route
+                path="*"
+                element={<Navigate to="/" replace />}
+              />
+
             </Routes>
           </main>
         </div>
