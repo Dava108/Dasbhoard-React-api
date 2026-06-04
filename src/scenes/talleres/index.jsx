@@ -32,12 +32,42 @@ export default function AdminIndex() {
   const [formTaller, setFormTaller] = useState({ nombre: "", tipo: "", promotor: "" });
 
   // ── Cargas ────────────────────────────────────────────────────────────────
+  const acreditarInscripcion = async (inscripcion_id) => {
+    const res = await fetch(
+      `${BASE_URL}/inscripciones/acreditar_inscripcion.php`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          inscripcion_id
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.ok) {
+      alert(data.mensaje);
+
+      // recargar lista de inscritos
+      verInscritos(horarioActivo);
+
+      // recargar horarios para actualizar cupos
+      cargarHorarios(tallerSeleccionado);
+
+    } else {
+      alert(data.mensaje);
+    }
+  };
   const cargarTalleres = async () => {
     const res = await fetch(`${BASE_URL}/talleres/obtener_talleres.php`,
       {
-    credentials: "include"
-  }
-  );
+        credentials: "include"
+      }
+    );
     const data = await res.json();
     setTalleres(data);
   };
@@ -46,9 +76,9 @@ export default function AdminIndex() {
     if (!id) return;
     const res = await fetch(`${BASE_URL}/horarios/obtener_horarios.php?taller_id=${id}`,
       {
-    credentials: "include"
-  }
-  );
+        credentials: "include"
+      }
+    );
     const data = await res.json();
     if (Array.isArray(data)) setHorarios(data);
     else { setHorarios([]); setError(data.mensaje || "Error cargando horarios"); }
@@ -57,8 +87,8 @@ export default function AdminIndex() {
   const verInscritos = async (horario_id) => {
     const res = await fetch(`${BASE_URL}/inscripciones/obtener_inscritos.php?horario_id=${horario_id}`,
       {
-    credentials: "include"
-  }
+        credentials: "include"
+      }
 
     );
     const data = await res.json();
@@ -183,7 +213,7 @@ export default function AdminIndex() {
       </div>
 
       {/* ALERTAS */}
-      {error   && <div style={{ ...s.alert, ...s.alertError   }}>⚠ {error}</div>}
+      {error && <div style={{ ...s.alert, ...s.alertError }}>⚠ {error}</div>}
       {success && <div style={{ ...s.alert, ...s.alertSuccess }}>✓ {success}</div>}
 
       <div style={s.grid}>
@@ -450,6 +480,9 @@ export default function AdminIndex() {
                           </td>
                           <td style={s.td}>{a.carrera}</td>
                           <td style={s.td}>
+                            <button style={s.btnSmallDanger} onClick={() => acreditarInscripcion(a.inscripcion_id)}>
+                              Acreditar
+                            </button>
                             <button style={s.btnSmallDanger} onClick={() => cancelarInscripcion(a.id)}>
                               Cancelar inscripción
                             </button>

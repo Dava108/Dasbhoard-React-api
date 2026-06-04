@@ -30,6 +30,7 @@ import Configuracion from "./scenes/configuracion";
 import Usuarios from "./scenes/usuarios/index.jsx";
 import AdminIndex from "./scenes/talleres";
 import Inscripciones from "./scenes/Inscripciones/index.jsx";
+import HistorialAlumno from "./scenes/alumno/historial/index.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -258,6 +259,10 @@ function App() {
                     <Inscripciones />
                   </RoleRoute>
                 }
+              />
+              <Route
+                path="/alumno/historial"
+                element={<HistorialAlumno />}
               />
 
               {/* ========================= */}

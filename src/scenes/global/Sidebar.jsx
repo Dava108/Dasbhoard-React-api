@@ -281,12 +281,20 @@ const Sidebar = ({isOpen, setIsOpen}) => {
             <>
               <SectionLabel label="General" colors={colors} />
               <Item title="Inscripcion" to="/inscripciones" icon={<HomeOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
+
+              <SectionLabel label="Historial" colors={colors} />
+              <Item title="Mis Talleres" to="/alumno/historial" icon={<PersonOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
               
+
+
+
               <SectionLabel label="Créditos" colors={colors} />
               <Item title="Mi Kardex" to="/alumno" icon={<PersonOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
+              
+              
 
-              <SectionLabel label="Mis actividades" colors={colors} />
-              <Item title="Calendario" to="/calendar" icon={<CalendarTodayOutlinedIcon />} selected={selected} setSelected={setSelected} onNavigate={() => setIsOpen(false)} />
+
+
             </>
           )}
 

@@ -54,21 +54,45 @@ export const eliminarRegistro = async (id) => {
   }).then((res) => res.json());
 };
 
-export const importarAlumnos = async (file, generacion_id, carrera_id) => {
+export const importarAlumnos = async (
+  file,
+  generacion,
+  carrera,
+  periodo
+) => {
+
   const formData = new FormData();
-  formData.append("archivo", file);
-  formData.append("generacion_id", generacion_id);
-  formData.append("carrera_id", carrera_id);
 
-  const res = await fetch(`${API_URL}/alumnos/importar_alumnos.php`, {
-    method: "POST",
-    body: formData,
-  });
+  formData.append(
+    "archivo",
+    file
+  );
 
-  const text = await res.text();
-  console.log("IMPORT RAW:", text);
+  formData.append(
+    "generacion_id",
+    generacion
+  );
 
-  return JSON.parse(text);
+  formData.append(
+    "carrera_id",
+    carrera
+  );
+
+  formData.append(
+    "periodo_id",
+    periodo
+  );
+
+  const res = await fetch(
+    "http://localhost:81/creditos_api/alumnos/importar.php",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  return await res.json();
+
 };
 
 export const generarConstancia = (alumno_id) => {
@@ -259,7 +283,7 @@ export const obtenerHorariosAlumno = async (taller_id) => {
 
 
 
-export const inscribirse = async (horario_id) => {
+export const inscribirse = async (horario_id, periodo_id) => {
   const res = await fetch(`${BASE_URL}/alumno/inscripciones/inscribirse.php`, {
     method: "POST",
     headers: {
@@ -267,8 +291,9 @@ export const inscribirse = async (horario_id) => {
     },
     credentials: "include", // 
     body: JSON.stringify({
-      horario_id
-    })
+    horario_id,
+    periodo_id
+})
   });
 
   return await res.json();
@@ -310,4 +335,18 @@ export const eliminarTaller = async (taller_id) => {
   });
 
   return await res.json();
+};
+
+
+export const obtenerHistorial = async () => {
+
+  const res = await fetch(
+    `${BASE_URL}/alumno/inscripciones/obtener_historial.php`,
+    {
+      credentials:"include"
+    }
+  );
+
+  return await res.json();
+
 };

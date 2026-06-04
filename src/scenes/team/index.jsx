@@ -50,6 +50,7 @@ const Team = () => {
   const [generacion, setGeneracion] = useState("");
 
   const [carrera, setCarrera] = useState("");
+  const [periodo, setPeriodo] = useState("");
 
 
   const [fileKardex, setFileKardex] = useState(null);
@@ -241,9 +242,9 @@ const Team = () => {
   ];
   const handleImport = async () => {
     if (!file) return alert("Selecciona un archivo");
-    if (!generacion || !carrera) return alert("Selecciona generación y carrera");
+    if (!generacion || !carrera || !periodo) return alert("Selecciona generación, carrera y semestre");
 
-    const res = await importarAlumnos(file, generacion, carrera);
+    const res = await importarAlumnos(file, generacion, carrera, periodo);
 
     if (res.status === "ok") {
       alert(`Importados: ${res.insertados}`);
@@ -301,6 +302,24 @@ const Team = () => {
             <MenuItem value="6">I.Agricola Sustentable</MenuItem>
             <MenuItem value="7">Turismo</MenuItem>
             <MenuItem value="8">Industrial</MenuItem>
+          </TextField>
+
+          <TextField
+            select
+            label="Semestre"
+            value={periodo}
+            onChange={(e) => setPeriodo(e.target.value)}
+            size="small"
+          >
+            <MenuItem value="1">1°</MenuItem>
+            <MenuItem value="2">2°</MenuItem>
+            <MenuItem value="3">3°</MenuItem>
+            <MenuItem value="4">4°</MenuItem>
+            <MenuItem value="5">5°</MenuItem>
+            <MenuItem value="6">6°</MenuItem>
+            <MenuItem value="7">7°</MenuItem>
+            <MenuItem value="8">8°</MenuItem>
+            <MenuItem value="9">9°</MenuItem>
           </TextField>
 
           <Button variant="contained" onClick={buscar} sx={{ backgroundColor: "#4cceac" }}>

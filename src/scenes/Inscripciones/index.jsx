@@ -5,6 +5,7 @@ import {
   Select,
   MenuItem,
   Button,
+  TextField,
   useTheme,
   useMediaQuery
 } from "@mui/material";
@@ -28,6 +29,8 @@ const Inscripciones = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [periodo, setPeriodo] = useState("");
+
   // ========================
   // CARGAS
   // ========================
@@ -48,7 +51,7 @@ const Inscripciones = () => {
     } else {
       setHorarios([]);
       setError("Error cargando horarios");
-      
+
     }
   };
 
@@ -76,7 +79,10 @@ const Inscripciones = () => {
 
 
   const handleInscribirse = async (horario_id) => {
-    const res = await inscribirse(horario_id);
+    const res = await inscribirse(
+      horario_id,
+      periodo
+    );
     console.log("HORARIO QUE ENVÍO:", horario_id);
 
     if (res.ok) {
@@ -91,20 +97,20 @@ const Inscripciones = () => {
 
   const handleCancelar = async (horario_id) => {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  const res = await cancelarInscripcionAlumno(
-    user.id,
-    horario_id
-  );
+    const res = await cancelarInscripcionAlumno(
+      user.id,
+      horario_id
+    );
 
-  if (res.ok) {
-    setSuccess("Inscripción cancelada");
-    cargarHorarios(tallerSeleccionado);
-  } else {
-    setError(res.mensaje);
-  }
-};
+    if (res.ok) {
+      setSuccess("Inscripción cancelada");
+      cargarHorarios(tallerSeleccionado);
+    } else {
+      setError(res.mensaje);
+    }
+  };
 
   // ========================
   // RENDER BOTÓN
@@ -136,14 +142,52 @@ const Inscripciones = () => {
     }
 
     return (
-      <Button
-        size="small"
-        variant="contained"
-        onClick={() => handleInscribirse(h.id)}
+      <Box
+        display="flex"
+        gap={1}
+        alignItems="center"
+        flexWrap="wrap"
       >
-        Inscribirme
-      </Button>
+
+        <TextField
+          select
+          label="Semestre actual"
+          value={periodo}
+          onChange={(e) => setPeriodo(e.target.value)}
+          size="small"
+          sx={{ minWidth: 140 }}
+        >
+          <MenuItem value="1">1°</MenuItem>
+          <MenuItem value="2">2°</MenuItem>
+          <MenuItem value="3">3°</MenuItem>
+          <MenuItem value="4">4°</MenuItem>
+          <MenuItem value="5">5°</MenuItem>
+          <MenuItem value="6">6°</MenuItem>
+          <MenuItem value="7">7°</MenuItem>
+          <MenuItem value="8">8°</MenuItem>
+          <MenuItem value="9">9°</MenuItem>
+        </TextField>
+
+        <Button
+          size="small"
+          variant="contained"
+          onClick={() => {
+
+            if (!periodo) {
+              setError("Selecciona tu semestre");
+              return;
+            }
+
+            handleInscribirse(h.id);
+
+          }}
+        >
+          Inscribirme
+        </Button>
+
+      </Box>
     );
+
   };
 
   // ========================
