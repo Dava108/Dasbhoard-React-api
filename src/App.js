@@ -31,6 +31,8 @@ import Usuarios from "./scenes/usuarios/index.jsx";
 import AdminIndex from "./scenes/talleres";
 import Inscripciones from "./scenes/Inscripciones/index.jsx";
 import HistorialAlumno from "./scenes/alumno/historial/index.jsx";
+import HorariosLote from "./scenes/admin/horarios_lote/index.jsx";
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -109,6 +111,14 @@ function App() {
                 element={
                   <RoleRoute role="admin">
                     <Dashboard />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/talleres/nuevo"
+                element={
+                  <RoleRoute role="admin">
+                    <HorariosLote />
                   </RoleRoute>
                 }
               />
